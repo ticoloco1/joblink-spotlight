@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,14 +22,24 @@ const Login = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isSupabaseConfigured) {
+      toast.error('Login não configurado. Configure as variáveis do Supabase.');
+      return;
+    }
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
       toast.success(t('auth.loginSuccess'));
-      router.push('/dashboard');
+      // Redirecionar com reload para o AuthProvider carregar a sessão (evita voltar para /login)
+      window.location.href = '/dashboard';
+    } catch (err: any) {
+      toast.error(err?.message || 'Erro ao fazer login');
+    } finally {
+      setLoading(false);
     }
   };
 
