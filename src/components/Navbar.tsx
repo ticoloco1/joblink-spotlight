@@ -6,7 +6,7 @@ import { Globe, Menu, X, LayoutDashboard, Shield } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import logoImg from '@/assets/logo.png';
 import SlugTicker from '@/components/SlugTicker';
 
@@ -18,13 +18,13 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      supabase.rpc('is_admin', { _user_id: user.id }).then(({ data }) => {
-        if (data === true) setIsAdmin(true);
-      });
-    } else {
+    if (!user || !isSupabaseConfigured) {
       setIsAdmin(false);
+      return;
     }
+    supabase.rpc('is_admin', { _user_id: user.id }).then(({ data }) => {
+      if (data === true) setIsAdmin(true);
+    }).catch(() => setIsAdmin(false));
   }, [user]);
 
   const languages: Language[] = ['en', 'pt', 'es', 'fr'];

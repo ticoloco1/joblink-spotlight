@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 
 interface Ad {
   id: string;
@@ -23,6 +23,7 @@ const AdBanner = ({ placement, className = '' }: AdBannerProps) => {
   const [ad, setAd] = useState<Ad | null>(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured) return;
     const fetchAd = async () => {
       const { data } = await supabase
         .from('ads')
@@ -47,15 +48,15 @@ const AdBanner = ({ placement, className = '' }: AdBannerProps) => {
   const sizes = AD_FORMATS[formatKey] ?? AD_FORMATS.banner;
 
   const handleClick = async () => {
-    if (ad) {
-      // Track click
+    if (!ad) return;
+    if (isSupabaseConfigured) {
       const { data: current } = await supabase.from('ads').select('clicks').eq('id', ad.id).single();
       if (current) {
         await supabase.from('ads').update({ clicks: current.clicks + 1 }).eq('id', ad.id);
       }
-      if (ad.target_url) {
-        window.open(ad.target_url, '_blank', 'noopener,noreferrer');
-      }
+    }
+    if (ad.target_url) {
+      window.open(ad.target_url, '_blank', 'noopener,noreferrer');
     }
   };
 

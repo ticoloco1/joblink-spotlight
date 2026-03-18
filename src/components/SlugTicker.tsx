@@ -3,25 +3,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Tag } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 
 /** Ticker no cabeçalho para venda de slugs — CTA para marketplace */
 export default function SlugTicker() {
   const [slugs, setSlugs] = useState<string[]>([]);
 
   useEffect(() => {
-    // A tipagem do Supabase para relacionamentos/tabelas pode ficar profunda demais.
-    // Aqui tratamos como `any` para manter o comportamento runtime.
+    if (!isSupabaseConfigured) return;
     supabase
       .from('slug_marketplace' as any)
       .select('slug' as any)
       .eq('status', 'active')
       .limit(8)
       .then(({ data }) => {
-      if (data?.length) {
-        setSlugs((data as unknown as { slug: string }[]).map((r) => r.slug));
-      }
-    });
+        if (data?.length) {
+          setSlugs((data as unknown as { slug: string }[]).map((r) => r.slug));
+        }
+      })
+      .catch(() => {});
   }, []);
 
   const part = slugs.length > 0 ? `Slugs à venda: ${slugs.join(' · ')} — ` : '';
