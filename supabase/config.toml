@@ -1,0 +1,7 @@
+project_id = "kzqjatxfqpigtczpekmw"
+
+[functions.polygon-webhook]
+verify_jwt = false
+
+[functions.payout-credits-to-usdc]
+verify_jwt = false

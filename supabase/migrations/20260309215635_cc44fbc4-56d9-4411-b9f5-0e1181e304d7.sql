@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS site_customization jsonb DEFAULT '{}'::jsonb;
