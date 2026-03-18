@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { X, Megaphone } from 'lucide-react';
 
@@ -20,6 +20,7 @@ const BroadcastBanner = () => {
   }, []);
 
   const loadLatestBroadcast = async () => {
+    if (!isSupabaseConfigured) return;
     const { data } = await supabase
       .from('broadcasts')
       .select('*')

@@ -1,6 +1,7 @@
 'use client';
 
 import { HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from 'next-themes';
 import { MemoryRouter } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
@@ -15,18 +16,20 @@ const queryClient = new QueryClient();
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <HelmetProvider>
-      <LanguageProvider>
-        <AuthProvider>
-          <QueryClientProvider client={queryClient}>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BroadcastBanner />
-              <MemoryRouter>{children}</MemoryRouter>
-            </TooltipProvider>
-          </QueryClientProvider>
-        </AuthProvider>
-      </LanguageProvider>
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <LanguageProvider>
+          <AuthProvider>
+            <QueryClientProvider client={queryClient}>
+              <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BroadcastBanner />
+                <MemoryRouter>{children}</MemoryRouter>
+              </TooltipProvider>
+            </QueryClientProvider>
+          </AuthProvider>
+        </LanguageProvider>
+      </ThemeProvider>
     </HelmetProvider>
   );
 }

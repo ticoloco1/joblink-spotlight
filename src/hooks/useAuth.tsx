@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import type { User, Session } from '@supabase/supabase-js';
 
 interface SubscriptionInfo {
@@ -26,6 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [subscriptions, setSubscriptions] = useState<SubscriptionInfo[]>([]);
 
   const checkSubscription = async () => {
+    if (!isSupabaseConfigured) return;
     try {
       const { data, error } = await supabase.functions.invoke('check-subscription');
       if (!error && data?.subscriptions) {
@@ -37,6 +38,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    if (!isSupabaseConfigured) {
+      setLoading(false);
+      return;
+    }
     const { data: { subscription: authSub } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
@@ -63,7 +68,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    if (isSupabaseConfigured) {
+      await supabase.auth.signOut();
+    }
     setUser(null);
     setSession(null);
     setSubscriptions([]);
