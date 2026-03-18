@@ -27,7 +27,10 @@ const BroadcastBanner = () => {
       .limit(1);
     if (data && data.length > 0) {
       const b = data[0] as BroadcastMessage;
-      const dismissedIds = JSON.parse(localStorage.getItem('dismissed_broadcasts') || '[]');
+      if (typeof window === 'undefined') return;
+      const dismissedIds = JSON.parse(
+        window.localStorage.getItem('dismissed_broadcasts') || '[]'
+      );
       if (!dismissedIds.includes(b.id)) {
         setBroadcast(b);
       }
@@ -36,9 +39,15 @@ const BroadcastBanner = () => {
 
   const dismiss = () => {
     if (!broadcast) return;
-    const dismissedIds = JSON.parse(localStorage.getItem('dismissed_broadcasts') || '[]');
+    if (typeof window === 'undefined') return;
+    const dismissedIds = JSON.parse(
+      window.localStorage.getItem('dismissed_broadcasts') || '[]'
+    );
     dismissedIds.push(broadcast.id);
-    localStorage.setItem('dismissed_broadcasts', JSON.stringify(dismissedIds.slice(-20)));
+    window.localStorage.setItem(
+      'dismissed_broadcasts',
+      JSON.stringify(dismissedIds.slice(-20))
+    );
     setBroadcast(null);
   };
 

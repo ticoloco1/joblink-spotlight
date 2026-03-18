@@ -1,18 +1,17 @@
-'use client';
-
+import type { AppProps } from 'next/app';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HelmetProvider } from 'react-helmet-async';
-import { MemoryRouter } from 'react-router-dom';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import BroadcastBanner from '@/components/BroadcastBanner';
 import { LanguageProvider } from '@/i18n/LanguageContext';
 import { AuthProvider } from '@/hooks/useAuth';
-import BroadcastBanner from '@/components/BroadcastBanner';
+import { MemoryRouter } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function App({ Component, pageProps }: AppProps) {
   return (
     <HelmetProvider>
       <LanguageProvider>
@@ -22,7 +21,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
               <Toaster />
               <Sonner />
               <BroadcastBanner />
-              <MemoryRouter>{children}</MemoryRouter>
+              <MemoryRouter>
+                <Component {...pageProps} />
+              </MemoryRouter>
             </TooltipProvider>
           </QueryClientProvider>
         </AuthProvider>
@@ -30,3 +31,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </HelmetProvider>
   );
 }
+

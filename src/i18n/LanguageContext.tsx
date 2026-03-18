@@ -10,19 +10,28 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<Language>(() => {
-    const saved = localStorage.getItem('jobinlink-lang');
-    if (saved && ['en', 'pt', 'es', 'fr'].includes(saved)) return saved as Language;
-    const browserLang = navigator.language.slice(0, 2);
-    if (browserLang === 'pt') return 'pt';
-    if (browserLang === 'es') return 'es';
-    if (browserLang === 'fr') return 'fr';
-    return 'en';
-  });
+  const [language, setLanguage] = useState<Language>('en');
+
+  // Durante SSR/prerender (next build), `window`, `localStorage` e `navigator` não existem.
+  // Carregamos o idioma apenas no client.
+  React.useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const saved = window.localStorage.getItem('jobinlink-lang');
+    if (saved && ['en', 'pt', 'es', 'fr'].includes(saved)) {
+      setLanguage(saved as Language);
+      return;
+    }
+    const browserLang = window.navigator.language.slice(0, 2);
+    if (browserLang === 'pt') return setLanguage('pt');
+    if (browserLang === 'es') return setLanguage('es');
+    if (browserLang === 'fr') return setLanguage('fr');
+    return setLanguage('en');
+  }, []);
 
   const handleSetLanguage = useCallback((lang: Language) => {
     setLanguage(lang);
-    localStorage.setItem('jobinlink-lang', lang);
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem('jobinlink-lang', lang);
     document.documentElement.lang = lang;
   }, []);
 

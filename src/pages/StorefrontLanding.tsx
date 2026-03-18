@@ -7,18 +7,32 @@ import { CENTER_URL, type StorefrontConfig } from '@/config/storefronts';
 import logoImg from '@/assets/logo.png';
 
 interface StorefrontLandingProps {
-  storefront: StorefrontConfig;
-  hostname: string;
+  storefront?: StorefrontConfig;
+  hostname?: string;
 }
 
 const displayDomain = (host: string) => host.replace(/^www\./, '');
 
-export default function StorefrontLanding({ storefront, hostname }: StorefrontLandingProps) {
-  const [mode, setMode] = useState<'s' | 'handle'>(storefront.slugPrefix);
+export default function StorefrontLanding({
+  storefront,
+  hostname,
+}: StorefrontLandingProps) {
+  const resolvedHostname =
+    hostname ||
+    (typeof window !== 'undefined' ? window.location.hostname : 'jobinlink.com');
+
+  const resolvedStorefront: StorefrontConfig =
+    storefront || {
+      domain: resolvedHostname,
+      name: 'JobinLink',
+      slugPrefix: 's',
+    };
+
+  const [mode, setMode] = useState<'s' | 'handle'>(resolvedStorefront.slugPrefix);
   const [query, setQuery] = useState('');
   const [searchError, setSearchError] = useState('');
 
-  const domain = displayDomain(hostname);
+  const domain = displayDomain(resolvedHostname);
   const prefix = mode === 'handle' ? '@' : '/';
   const placeholder = `${domain}/${prefix}${mode === 'handle' ? 'seuhandle' : 'sua-pagina'}`;
 
@@ -72,9 +86,12 @@ export default function StorefrontLanding({ storefront, hostname }: StorefrontLa
   return (
     <>
       <Helmet>
-        <title>{storefront.name} — One keyword. Infinite authority.</title>
-        <meta name="description" content={`Buscar e comprar domínios e slugs em ${storefront.name}. Mini-sites no JobinLink.`} />
-        <meta property="og:title" content={`${storefront.name} | ${domain}`} />
+        <title>{resolvedStorefront.name} — One keyword. Infinite authority.</title>
+        <meta
+          name="description"
+          content={`Buscar e comprar domínios e slugs em ${resolvedStorefront.name}. Mini-sites no JobinLink.`}
+        />
+        <meta property="og:title" content={`${resolvedStorefront.name} | ${domain}`} />
         <link rel="canonical" href={`https://${domain}`} />
       </Helmet>
 
@@ -83,7 +100,7 @@ export default function StorefrontLanding({ storefront, hostname }: StorefrontLa
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <img src={typeof logoImg === 'string' ? logoImg : logoImg.src} alt="" className="h-8 w-8 rounded-lg object-contain" />
-            <span className="font-bold text-foreground">{storefront.name}</span>
+            <span className="font-bold text-foreground">{resolvedStorefront.name}</span>
           </div>
           <div className="flex items-center gap-3">
             <a

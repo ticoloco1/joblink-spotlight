@@ -1,12 +1,23 @@
 import type { Metadata } from 'next';
 import ProfilePage from '@/pages/ProfilePage';
-import { supabase } from '@/integrations/supabase/client';
+import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const canonical = `https://jobinlink.com/c/${slug}`;
+
+  // Durante `next build`, o Vercel pode ainda não ter Environment Variables configuradas.
+  // Evitamos chamadas ao Supabase para não quebrar o deploy.
+  if (!isSupabaseConfigured) {
+    return {
+      title: `${slug} | JobinLink`,
+      description: `Empresa indisponível: ${slug}`,
+      alternates: { canonical },
+      robots: { index: false, follow: false },
+    };
+  }
 
   // O client Supabase está tipado a partir de `src/integrations/supabase/types.ts`.
   // Como o RPC `get_slug_public_status` foi criado recentemente, pode não existir na tipagem.

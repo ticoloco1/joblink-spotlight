@@ -1,4 +1,5 @@
 import Dashboard from '@/pages/Dashboard';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Dashboard | JobinLink',
@@ -6,5 +7,10 @@ export const metadata = {
 };
 
 export default function DashboardPage() {
-  return <Dashboard />;
+  // `Dashboard` usa `useSearchParams`, que precisa de Suspense boundary.
+  return (
+    <Suspense fallback={null}>
+      <Dashboard />
+    </Suspense>
+  );
 }

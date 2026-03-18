@@ -1,6 +1,11 @@
-'use client';
 import Marketplace from '@/pages/Marketplace';
+import { Suspense } from 'react';
 
 export default function Page() {
-  return <Marketplace />;
+  // `Marketplace` usa `useSearchParams`, que precisa de Suspense boundary.
+  return (
+    <Suspense fallback={null}>
+      <Marketplace />
+    </Suspense>
+  );
 }
