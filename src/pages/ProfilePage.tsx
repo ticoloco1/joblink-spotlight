@@ -172,7 +172,7 @@ const ProfilePage = ({ prefix }: { prefix?: 'u' | 'c' } = {}) => {
   const paywallActive = paywall.enabled && paywall.mode === 'full' && !isOwner;
 
   const checkAccess = async () => {
-    if (!paywallActive) return;
+    if (!paywallActive || !profile?.id) return;
     if (!user) { setHasAccess(false); return; }
     setCheckingAccess(true);
     const { data } = await supabase
@@ -187,7 +187,7 @@ const ProfilePage = ({ prefix }: { prefix?: 'u' | 'c' } = {}) => {
     setCheckingAccess(false);
   };
 
-  useEffect(() => { checkAccess(); }, [paywallActive, user?.id, profile.id]);
+  useEffect(() => { checkAccess(); }, [paywallActive, user?.id, profile?.id]);
 
   const handlePaywallCheckout = async () => {
     if (!user) {

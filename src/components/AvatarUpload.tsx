@@ -14,36 +14,43 @@ interface AvatarUploadProps {
 
 const AvatarUpload = ({ userId, currentUrl, name, onUploaded }: AvatarUploadProps) => {
   const [uploading, setUploading] = useState(false);
+  const [localPreview, setLocalPreview] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  // Usar preview local se existir, senão usar a URL atual
+  const displayUrl = localPreview || currentUrl;
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log('[v0] AvatarUpload - arquivo selecionado:', file?.name, file?.size, file?.type);
     if (!file) return;
+
+    // Criar preview local imediatamente
+    const objectUrl = URL.createObjectURL(file);
+    setLocalPreview(objectUrl);
 
     if (!file.type.startsWith('image/')) {
       toast.error('Selecione uma imagem válida');
+      setLocalPreview(null);
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
       toast.error('Imagem deve ter no máximo 5MB');
+      setLocalPreview(null);
       return;
     }
 
     setUploading(true);
     const ext = file.name.split('.').pop();
     const path = `${userId}/avatar.${ext}`;
-    console.log('[v0] AvatarUpload - tentando upload para:', path);
 
-    const { error: uploadError, data: uploadData } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from('profile-photos')
       .upload(path, file, { upsert: true });
 
-    console.log('[v0] AvatarUpload - resultado upload:', { error: uploadError, data: uploadData });
-
     if (uploadError) {
       toast.error('Erro ao enviar foto: ' + uploadError.message);
+      setLocalPreview(null);
       setUploading(false);
       return;
     }
@@ -53,14 +60,11 @@ const AvatarUpload = ({ userId, currentUrl, name, onUploaded }: AvatarUploadProp
       .getPublicUrl(path);
 
     const url = `${publicUrl}?t=${Date.now()}`;
-    console.log('[v0] AvatarUpload - URL pública gerada:', url);
 
     const { error: updateError } = await supabase
       .from('profiles')
       .update({ photo_url: url })
       .eq('user_id', userId);
-
-    console.log('[v0] AvatarUpload - resultado update profile:', { error: updateError });
 
     if (updateError) {
       toast.error('Erro ao salvar foto: ' + updateError.message);
@@ -83,7 +87,7 @@ const AvatarUpload = ({ userId, currentUrl, name, onUploaded }: AvatarUploadProp
     <div className="flex flex-col items-center gap-3">
       <div className="relative group">
         <Avatar className="h-24 w-24 border-2 border-border">
-          <AvatarImage src={currentUrl || undefined} alt={name} />
+          <AvatarImage src={displayUrl || undefined} alt={name} />
           <AvatarFallback className="text-xl font-semibold bg-primary/10 text-primary">
             {initials}
           </AvatarFallback>

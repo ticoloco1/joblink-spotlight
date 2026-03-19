@@ -245,7 +245,6 @@ const MiniSiteEditor = ({ userId, initialCustomization, bannerUrl, onBannerUploa
 
   const handleSave = async () => {
     setSaving(true);
-    console.log('[v0] MiniSiteEditor - iniciando save, userId:', userId);
     try {
       const payload: Record<string, any> = {};
       Object.entries(customization).forEach(([k, v]) => {
@@ -253,18 +252,14 @@ const MiniSiteEditor = ({ userId, initialCustomization, bannerUrl, onBannerUploa
         else if (typeof v === 'string' && v !== '') payload[k] = v;
         else if (typeof v === 'number') payload[k] = v;
       });
-      console.log('[v0] MiniSiteEditor - payload a salvar:', payload);
 
-      const { error, data } = await supabase
+      const { error } = await supabase
         .from('profiles')
         .update({ site_customization: payload } as any)
-        .eq('user_id', userId)
-        .select();
-      console.log('[v0] MiniSiteEditor - resultado save:', { error, data });
+        .eq('user_id', userId);
       if (error) throw error;
       toast.success('Customizações salvas!');
     } catch (e: any) {
-      console.error('[v0] MiniSiteEditor - erro ao salvar:', e);
       toast.error(e.message);
     }
     setSaving(false);
@@ -272,7 +267,6 @@ const MiniSiteEditor = ({ userId, initialCustomization, bannerUrl, onBannerUploa
 
   const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    console.log('[v0] MiniSiteEditor - banner selecionado:', file?.name, file?.size);
     if (!file) return;
     if (file.size > 5 * 1024 * 1024) {
       toast.error('Banner deve ter no máximo 5MB');
@@ -282,23 +276,18 @@ const MiniSiteEditor = ({ userId, initialCustomization, bannerUrl, onBannerUploa
     try {
       const ext = file.name.split('.').pop();
       const path = `${userId}/banner.${ext}`;
-      console.log('[v0] MiniSiteEditor - tentando upload banner para:', path);
-      const { error: upErr, data: uploadData } = await supabase.storage
+      const { error: upErr } = await supabase.storage
         .from('profile-photos')
         .upload(path, file, { upsert: true });
-      console.log('[v0] MiniSiteEditor - resultado upload banner:', { error: upErr, data: uploadData });
       if (upErr) throw upErr;
       const { data: { publicUrl } } = supabase.storage
         .from('profile-photos')
         .getPublicUrl(path);
-      console.log('[v0] MiniSiteEditor - URL banner:', publicUrl);
       
-      const { error: updateErr } = await supabase.from('profiles').update({ banner_url: publicUrl } as any).eq('user_id', userId);
-      console.log('[v0] MiniSiteEditor - resultado update banner:', { error: updateErr });
+      await supabase.from('profiles').update({ banner_url: publicUrl } as any).eq('user_id', userId);
       onBannerUploaded?.(publicUrl);
       toast.success('Banner atualizado!');
     } catch (err: any) {
-      console.error('[v0] MiniSiteEditor - erro banner:', err);
       toast.error(err.message);
     }
     setUploadingBanner(false);
