@@ -1,5 +1,7 @@
+'use client';
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -13,7 +15,7 @@ import { LogIn } from 'lucide-react';
 
 const Login = () => {
   const { t } = useLanguage();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,7 +35,7 @@ const Login = () => {
       }
       toast.success(t('auth.loginSuccess'));
       // Redirecionar com reload para o AuthProvider carregar a sessão (evita voltar para /login)
-      navigate('/dashboard', { replace: true });
+      router.push('/dashboard');
     } catch (err: any) {
       toast.error(err?.message || 'Erro ao fazer login');
     } finally {
@@ -66,7 +68,7 @@ const Login = () => {
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {t('auth.noAccount')}{' '}
-            <Link to="/signup" className="text-primary font-medium hover:underline">{t('auth.signupLink')}</Link>
+            <Link href="/signup" className="text-primary font-medium hover:underline">{t('auth.signupLink')}</Link>
           </p>
         </div>
       </main>

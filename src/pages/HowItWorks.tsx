@@ -1,6 +1,6 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { UserPlus, Palette, Eye, Rocket, DollarSign, Video, Share2, Shield } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -129,12 +129,12 @@ const HowItWorks = () => {
               <h2 className="text-3xl font-bold">{t('how.free.title')}</h2>
               <p className="mt-4 text-lg text-muted-foreground leading-relaxed">{t('how.free.desc')}</p>
               <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-                <Link to="/signup">
+                <Link href="/signup">
                   <Button size="lg" className="gradient-hero text-primary-foreground border-0 px-8">
                     {t('how.free.cta')}
                   </Button>
                 </Link>
-                <Link to="/templates">
+                <Link href="/templates">
                   <Button size="lg" variant="outline" className="px-8">
                     {t('how.free.templates')}
                   </Button>

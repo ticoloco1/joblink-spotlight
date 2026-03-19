@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Gavel, Loader2, DollarSign } from 'lucide-react';
 import { getSlugTag, getGrowthPercent } from '@/lib/slugValuation';
@@ -48,7 +48,7 @@ export default function SlugCard({
 
   return (
     <div className="bg-zinc-950 p-4 rounded-2xl border border-zinc-800 hover:scale-[1.02] hover:border-zinc-600 transition-all duration-200">
-      <Link to={`/marketplace/slug/${item.slug}`} className="block mb-2">
+      <Link href={`/marketplace/slug/${item.slug}`} className="block mb-2">
         <h2 className="text-xl font-bold text-white truncate">{item.slug}</h2>
       </Link>
       {tag && (

@@ -1,10 +1,10 @@
 'use client';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { MapPin, Search, Rocket, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import BoostBar from '@/components/BoostBar';
@@ -46,45 +46,53 @@ const Directory = () => {
 
   const loadProfiles = async () => {
     setLoading(true);
+    try {
+      if (!isSupabaseConfigured) {
+        setProfiles(demoDirectoryProfiles as DirectoryProfile[]);
+        return;
+      }
+      // Config do selo (editável no Admin)
+      const keys = [
+        'directory_seals_enabled',
+        'directory_person_seal_min_boost',
+        'directory_company_seal_min_boost',
+      ];
+      const { data: settingsData } = await supabase
+        .from('platform_settings')
+        .select('key, value')
+        .in('key', keys)
+        .eq('category', 'directory');
 
-    // Config do selo (editável no Admin)
-    const keys = [
-      'directory_seals_enabled',
-      'directory_person_seal_min_boost',
-      'directory_company_seal_min_boost',
-    ];
-    const { data: settingsData } = await supabase
-      .from('platform_settings')
-      .select('key, value')
-      .in('key', keys)
-      .eq('category', 'directory');
+      const settingsMap = new Map<string, string>((settingsData || []).map((s: any) => [s.key, s.value]));
+      const enabledRaw = settingsMap.get('directory_seals_enabled');
+      const enabled =
+        enabledRaw === undefined || enabledRaw === null ? true : ['true', '1'].includes(String(enabledRaw).toLowerCase());
+      const personMinBoost = Number(settingsMap.get('directory_person_seal_min_boost') ?? 1);
+      const companyMinBoost = Number(settingsMap.get('directory_company_seal_min_boost') ?? 1);
 
-    const settingsMap = new Map<string, string>((settingsData || []).map((s: any) => [s.key, s.value]));
-    const enabledRaw = settingsMap.get('directory_seals_enabled');
-    const enabled =
-      enabledRaw === undefined || enabledRaw === null ? true : ['true', '1'].includes(String(enabledRaw).toLowerCase());
-    const personMinBoost = Number(settingsMap.get('directory_person_seal_min_boost') ?? 1);
-    const companyMinBoost = Number(settingsMap.get('directory_company_seal_min_boost') ?? 1);
+      setSealsConfig({
+        enabled,
+        personMinBoost: Number.isFinite(personMinBoost) ? personMinBoost : 1,
+        companyMinBoost: Number.isFinite(companyMinBoost) ? companyMinBoost : 1,
+      });
 
-    setSealsConfig({
-      enabled,
-      personMinBoost: Number.isFinite(personMinBoost) ? personMinBoost : 1,
-      companyMinBoost: Number.isFinite(companyMinBoost) ? companyMinBoost : 1,
-    });
+      // Perfis do diretório
+      const { data } = await supabase
+        .from('profiles')
+        .select(
+          'id, slug, name, title, location, photo_url, bio, skills, user_type, boost_score, homepage_until, paywall_enabled, paywall_mode'
+        )
+        .eq('is_published', true)
+        .order('boost_score', { ascending: false })
+        .order('updated_at', { ascending: false });
 
-    // Perfis do diretório
-    const { data } = await supabase
-      .from('profiles')
-      .select(
-        'id, slug, name, title, location, photo_url, bio, skills, user_type, boost_score, homepage_until, paywall_enabled, paywall_mode'
-      )
-      .eq('is_published', true)
-      .order('boost_score', { ascending: false })
-      .order('updated_at', { ascending: false });
-
-    const loaded = (data as DirectoryProfile[]) || [];
-    setProfiles(loaded.length > 0 ? loaded : (demoDirectoryProfiles as DirectoryProfile[]));
-    setLoading(false);
+      const loaded = (data as DirectoryProfile[]) || [];
+      setProfiles(loaded.length > 0 ? loaded : (demoDirectoryProfiles as DirectoryProfile[]));
+    } catch (_) {
+      setProfiles(demoDirectoryProfiles as DirectoryProfile[]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filtered = profiles.filter((p) => {
@@ -111,7 +119,7 @@ const Directory = () => {
       <Helmet>
         <title>{t('directory.title')} | JobinLink</title>
         <meta name="description" content={t('directory.subtitle')} />
-        <link rel="canonical" to="https://jobinlink.com/directory" />
+        <link rel="canonical" href="https://jobinlink.com/directory" />
         <meta property="og:title" content={`${t('directory.title')} | JobinLink`} />
         <meta property="og:description" content={t('directory.subtitle')} />
         <meta property="og:url" content="https://jobinlink.com/directory" />
@@ -165,7 +173,7 @@ const Directory = () => {
                     >
                       <div className={`rounded-xl border bg-card shadow-card transition-all hover:shadow-elevated ${isOnHomepage ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}>
                         <Link
-                          to={`/${prefix}/${profile.slug}`}
+                          href={`/${prefix}/${profile.slug}`}
                           className="group block p-6"
                         >
                           <div className="flex items-start gap-4">

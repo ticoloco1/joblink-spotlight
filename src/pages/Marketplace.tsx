@@ -1,7 +1,8 @@
+'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useSearchParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
+import { useSearchParams } from 'next/navigation';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Helmet } from 'react-helmet-async';
@@ -22,7 +23,7 @@ interface MarketplaceItem {
 
 export default function Marketplace() {
   const { user } = useAuth();
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const [items, setItems] = useState<MarketplaceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [buyingId, setBuyingId] = useState<string | null>(null);
@@ -45,36 +46,46 @@ export default function Marketplace() {
   }, [searchParams, user]);
 
   const loadItems = async () => {
-    const marketRes = await supabase
-      .from('slug_marketplace' as any)
-      .select('id, slug, price_cents, type, status, expires_at, owner_id' as any)
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
-    const list = (marketRes.data as unknown as MarketplaceItem[]) ?? [];
-    setItems(list);
-
-    const slugNames = list.map((i) => i.slug);
-    if (slugNames.length > 0) {
-      const { data: slugsData } = await supabase
-        .from('slugs' as any)
-        .select('slug, views, score, tag, suggested_price' as any)
-        .in('slug', slugNames);
-      const map: Record<string, { views: number; score: number | null; tag: string | null; suggested_price: number | null }> = {};
-      if (slugsData) {
-        slugsData.forEach((s: any) => {
-          map[s.slug] = { views: s.views ?? 0, score: s.score ?? null, tag: s.tag ?? null, suggested_price: s.suggested_price ?? null };
-        });
+    try {
+      if (!isSupabaseConfigured) {
+        setItems([]);
+        setLoading(false);
+        return;
       }
-      setSlugStatsMap(map);
-    }
+      const marketRes = await supabase
+        .from('slug_marketplace' as any)
+        .select('id, slug, price_cents, type, status, expires_at, owner_id' as any)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+      const list = (marketRes.data as unknown as MarketplaceItem[]) ?? [];
+      setItems(list);
 
-    const [priceRes, trendRes] = await Promise.all([
-      supabase.from('slugs' as any).select('slug, suggested_price' as any).not('suggested_price', 'is', null).order('suggested_price', { ascending: false }).limit(10),
-      supabase.from('slugs' as any).select('slug, score' as any).not('score', 'is', null).order('score', { ascending: false }).limit(10),
-    ]);
-    if (!priceRes.error && priceRes.data) setTopByPrice(priceRes.data as unknown as { slug: string; suggested_price: number | null }[]);
-    if (!trendRes.error && trendRes.data) setTrending(trendRes.data as unknown as { slug: string; score: number | null }[]);
-    setLoading(false);
+      const slugNames = list.map((i) => i.slug);
+      if (slugNames.length > 0) {
+        const { data: slugsData } = await supabase
+          .from('slugs' as any)
+          .select('slug, views, score, tag, suggested_price' as any)
+          .in('slug', slugNames);
+        const map: Record<string, { views: number; score: number | null; tag: string | null; suggested_price: number | null }> = {};
+        if (slugsData) {
+          slugsData.forEach((s: any) => {
+            map[s.slug] = { views: s.views ?? 0, score: s.score ?? null, tag: s.tag ?? null, suggested_price: s.suggested_price ?? null };
+          });
+        }
+        setSlugStatsMap(map);
+      }
+
+      const [priceRes, trendRes] = await Promise.all([
+        supabase.from('slugs' as any).select('slug, suggested_price' as any).not('suggested_price', 'is', null).order('suggested_price', { ascending: false }).limit(10),
+        supabase.from('slugs' as any).select('slug, score' as any).not('score', 'is', null).order('score', { ascending: false }).limit(10),
+      ]);
+      if (!priceRes.error && priceRes.data) setTopByPrice(priceRes.data as unknown as { slug: string; suggested_price: number | null }[]);
+      if (!trendRes.error && trendRes.data) setTrending(trendRes.data as unknown as { slug: string; score: number | null }[]);
+    } catch (_) {
+      setItems([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const completePurchase = async (sessionId: string) => {

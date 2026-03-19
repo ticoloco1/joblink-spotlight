@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
@@ -28,13 +28,13 @@ const displayToCents = (_key: string, value: string) => {
 
 const Admin = () => {
   const { user, loading: authLoading } = useAuth();
-  const navigate = useNavigate();
+  const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
     if (!authLoading && !user) {
-      navigate('/login', { replace: true });
+      router.replace('/login');
       return;
     }
     if (user) checkAdmin();

@@ -1,5 +1,6 @@
+'use client';
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
@@ -34,7 +35,7 @@ interface Listing {
 export default function SlugDetail() {
   const params = useParams();
   const slug = (params?.slug as string) ?? '';
-  const navigate = useNavigate();
+  const router = useRouter();
   const { user } = useAuth();
   const [stats, setStats] = useState<SlugStats | null>(null);
   const [listing, setListing] = useState<Listing | null>(null);
@@ -166,7 +167,7 @@ export default function SlugDetail() {
         <div className="container mx-auto max-w-2xl px-4">
           <button
             type="button"
-            onClick={() => navigate('/marketplace')}
+            onClick={() => router.push('/marketplace')}
             className="flex items-center gap-2 text-zinc-400 hover:text-white mb-6"
           >
             <ArrowLeft className="h-4 w-4" /> Voltar ao marketplace

@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "setup": "node scripts/install.js",
-    "dev": "vite",
-    "build": "vite build",
-    "start": "vite preview",
-    "lint": "eslint .",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest"
   },

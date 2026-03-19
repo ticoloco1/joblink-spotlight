@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Language, languageNames } from '@/i18n/translations';
 import { Globe, Menu, X, LayoutDashboard, Shield } from 'lucide-react';
@@ -33,32 +33,32 @@ const Navbar = () => {
       <SlugTicker />
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link to="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <img src={typeof logoImg === 'string' ? logoImg : logoImg.src} alt="JobinLink" className="h-9 w-9 rounded-lg object-contain" />
           <span className="text-xl font-bold font-display text-foreground">JobinLink</span>
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
-          <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.home')}
           </Link>
-          <Link to="/directory" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/directory" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.directory')}
           </Link>
-          <Link to="/jobs" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/jobs" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.jobs')}
           </Link>
-          <Link to="/how-it-works" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/how-it-works" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.howItWorks')}
           </Link>
-          <Link to="/videos" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/videos" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.videos')}
           </Link>
           <a href="/#pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.pricing')}
           </a>
-          <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link href="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.marketplace')}
           </Link>
 
@@ -89,13 +89,13 @@ const Navbar = () => {
           {user ? (
             <>
               {isAdmin && (
-                <Link to="/admin">
+                <Link href="/admin">
                   <Button variant="ghost" size="sm" className="text-destructive">
                     <Shield className="h-4 w-4 mr-1" /> Admin
                   </Button>
                 </Link>
               )}
-              <Link to="/dashboard">
+              <Link href="/dashboard">
                 <Button variant="ghost" size="sm">
                   <LayoutDashboard className="h-4 w-4 mr-1" /> Dashboard
                 </Button>
@@ -106,10 +106,10 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link to="/login">
+              <Link href="/login">
                 <Button variant="ghost" size="sm">{t('nav.login')}</Button>
               </Link>
-              <Link to="/signup">
+              <Link href="/signup">
                 <Button size="sm" className="gradient-hero text-primary-foreground border-0">
                   {t('nav.signup')}
                 </Button>
@@ -128,13 +128,13 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="border-t border-border bg-background px-4 py-4 md:hidden">
           <div className="flex flex-col gap-3">
-            <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.home')}</Link>
-            <Link to="/directory" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.directory')}</Link>
-            <Link to="/jobs" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.jobs')}</Link>
-            <Link to="/how-it-works" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.howItWorks')}</Link>
-            <Link to="/videos" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.videos')}</Link>
+            <Link href="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.home')}</Link>
+            <Link href="/directory" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.directory')}</Link>
+            <Link href="/jobs" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.jobs')}</Link>
+            <Link href="/how-it-works" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.howItWorks')}</Link>
+            <Link href="/videos" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.videos')}</Link>
             <a href="/#pricing" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.pricing')}</a>
-            <Link to="/marketplace" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.marketplace')}</Link>
+            <Link href="/marketplace" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.marketplace')}</Link>
             <div className="flex gap-2 pt-2">
               {languages.map((lang) => (
                 <button
@@ -150,13 +150,13 @@ const Navbar = () => {
               {user ? (
                 <>
                   {isAdmin && (
-                    <Link to="/admin" className="flex-1" onClick={() => setMobileOpen(false)}>
+                    <Link href="/admin" className="flex-1" onClick={() => setMobileOpen(false)}>
                       <Button variant="outline" size="sm" className="w-full text-destructive border-destructive/30">
                         <Shield className="h-4 w-4 mr-1" /> Admin
                       </Button>
                     </Link>
                   )}
-                  <Link to="/dashboard" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link href="/dashboard" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">Dashboard</Button>
                   </Link>
                   <Button variant="outline" size="sm" className="flex-1" onClick={() => { signOut(); setMobileOpen(false); }}>
@@ -165,10 +165,10 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link href="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">{t('nav.login')}</Button>
                   </Link>
-                  <Link to="/signup" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link href="/signup" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button size="sm" className="w-full gradient-hero text-primary-foreground border-0">{t('nav.signup')}</Button>
                   </Link>
                 </>

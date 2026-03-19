@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/i18n/LanguageContext';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Helmet } from 'react-helmet-async';
@@ -33,15 +33,24 @@ const Jobs = () => {
   }, []);
 
   const loadJobs = async () => {
-    const { data } = await supabase
-      .from('jobs')
-      .select('id, title, description, location, job_type, salary_range, skills, created_at')
-      .eq('is_active', true)
-      .order('created_at', { ascending: false });
+    try {
+      if (!isSupabaseConfigured) {
+        setJobs(demoJobs as Job[]);
+        return;
+      }
+      const { data } = await supabase
+        .from('jobs')
+        .select('id, title, description, location, job_type, salary_range, skills, created_at')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
 
-    const loaded = (data as Job[]) || [];
-    setJobs(loaded.length > 0 ? loaded : (demoJobs as Job[]));
-    setLoading(false);
+      const loaded = (data as Job[]) || [];
+      setJobs(loaded.length > 0 ? loaded : (demoJobs as Job[]));
+    } catch (_) {
+      setJobs(demoJobs as Job[]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const filtered = jobs.filter(j => {
