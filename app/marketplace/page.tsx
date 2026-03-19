@@ -1,4 +1,4 @@
-import Marketplace from '@/pages/Marketplace';
+import Marketplace from '@/views/Marketplace';
 import { Suspense } from 'react';
 
 export default function Page() {

@@ -1,4 +1,4 @@
-import Directory from '@/pages/Directory';
+import Directory from '@/views/Directory';
 
 import type { Metadata } from 'next';
 

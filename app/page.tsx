@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import Home from '@/pages/Home';
+import Home from '@/views/Home';
 
 export const metadata: Metadata = {
   title: 'JobinLink — Your Professional Identity, One Link Away',
