@@ -7,7 +7,6 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AdBanner from '@/components/AdBanner';
 import { Helmet } from 'react-helmet-async';
-import heroBanner from '@/assets/hero-banner.jpg';
 
 const featureIcons = [User, FileText, Search, Globe, Lock, Languages];
 
@@ -61,7 +60,7 @@ const Index = () => {
         {/* Hero */}
         <section className="relative overflow-hidden py-20 md:py-32">
           <div className="absolute inset-0">
-            <img src={typeof heroBanner === 'string' ? heroBanner : (heroBanner as any).src} alt="Professional networking" className="h-full w-full object-cover" />
+            <img src="/images/hero-banner.jpg" alt="Professional networking" className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
           </div>
           <div className="container relative mx-auto px-4 text-center">

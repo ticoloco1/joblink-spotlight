@@ -6,7 +6,6 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
-import logoImg from '@/assets/logo.png';
 import SlugTicker from '@/components/SlugTicker';
 
 const Navbar = () => {
@@ -34,7 +33,7 @@ const Navbar = () => {
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <img src={typeof logoImg === 'string' ? logoImg : logoImg.src} alt="JobinLink" className="h-9 w-9 rounded-lg object-contain" />
+          <img src="/images/logo.png" alt="JobinLink" className="h-9 w-9 rounded-lg object-contain" />
           <span className="text-xl font-bold font-display text-foreground">JobinLink</span>
         </Link>
 

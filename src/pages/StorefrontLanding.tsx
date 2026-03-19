@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Key, Globe, Rocket, Search } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { CENTER_URL, type StorefrontConfig } from '@/config/storefronts';
-import logoImg from '@/assets/logo.png';
 
 interface StorefrontLandingProps {
   storefront?: StorefrontConfig;
@@ -99,7 +98,7 @@ export default function StorefrontLanding({
       <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
         <div className="container mx-auto flex h-14 items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <img src={typeof logoImg === 'string' ? logoImg : logoImg.src} alt="" className="h-8 w-8 rounded-lg object-contain" />
+            <img src="/images/logo.png" alt="" className="h-8 w-8 rounded-lg object-contain" />
             <span className="font-bold text-foreground">{resolvedStorefront.name}</span>
           </div>
           <div className="flex items-center gap-3">

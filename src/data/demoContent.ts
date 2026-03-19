@@ -1,6 +1,5 @@
-import logo from '@/assets/logo.png';
-const logoUrl = typeof logo === 'string' ? logo : (logo as { src: string }).src;
-// Vídeos em public/ para Next.js (evitar loader de mp4)
+// Imagens e vídeos em public/ para Next.js
+const logoUrl = '/images/logo.png';
 const demoTechVideo = '/demo-tech.mp4';
 const demoCreativeVideo = '/demo-creative.mp4';
 import type { ProfileData, VideoItem } from '@/data/mockProfiles';
