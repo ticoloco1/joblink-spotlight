@@ -1,5 +1,5 @@
 'use client';
-import Templates from '@/pages/Templates';
+import Templates from '@/views/Templates';
 
 export default function Page() {
   return <Templates />;

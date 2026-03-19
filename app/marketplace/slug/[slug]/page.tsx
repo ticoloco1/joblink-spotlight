@@ -1,5 +1,5 @@
 'use client';
-import SlugDetail from '@/pages/SlugDetail';
+import SlugDetail from '@/views/SlugDetail';
 
 export default function Page() {
   return <SlugDetail />;

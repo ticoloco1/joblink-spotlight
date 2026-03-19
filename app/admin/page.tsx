@@ -1,5 +1,5 @@
 'use client';
-import Admin from '@/pages/Admin';
+import Admin from '@/views/Admin';
 
 export default function Page() {
   return <Admin />;

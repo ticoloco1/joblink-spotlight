@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import ProfilePage from '@/pages/ProfilePage';
+import ProfilePage from '@/views/ProfilePage';
 import { isSupabaseConfigured, supabase } from '@/integrations/supabase/client';
 
 type Props = { params: Promise<{ slug: string }> };
