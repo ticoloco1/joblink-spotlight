@@ -22,10 +22,12 @@ const AvatarUpload = ({ userId, currentUrl, name, onUploaded }: AvatarUploadProp
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log('[v0] AvatarUpload - handleUpload chamado, file:', file?.name);
     if (!file) return;
 
     // Criar preview local imediatamente
     const objectUrl = URL.createObjectURL(file);
+    console.log('[v0] AvatarUpload - preview criado:', objectUrl);
     setLocalPreview(objectUrl);
 
     if (!file.type.startsWith('image/')) {
@@ -67,8 +69,10 @@ const AvatarUpload = ({ userId, currentUrl, name, onUploaded }: AvatarUploadProp
       .eq('user_id', userId);
 
     if (updateError) {
+      console.log('[v0] AvatarUpload - erro ao atualizar profile:', updateError);
       toast.error('Erro ao salvar foto: ' + updateError.message);
     } else {
+      console.log('[v0] AvatarUpload - sucesso! chamando onUploaded com:', url);
       toast.success('Foto atualizada!');
       onUploaded(url);
     }
