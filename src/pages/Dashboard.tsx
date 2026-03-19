@@ -132,67 +132,98 @@ const Dashboard = () => {
     if (user) loadProfile();
   }, [user, authLoading]);
 
+  const defaultProfileFromUser = (): ProfileForm => ({
+    name: user?.user_metadata?.name || user?.email?.split('@')[0] || '',
+    title: '',
+    bio: '',
+    location: '',
+    skills: '',
+    contact_email: user?.email || '',
+    contact_phone: '',
+    contact_linkedin: '',
+    is_published: false,
+    video_url: null,
+    wallet_address: '',
+    paywall_enabled: false,
+    paywall_mode: 'none',
+    paywall_interval: 'monthly',
+    paywall_price_cents: 0,
+    minisite_paid_until: undefined,
+    minisite_plan: 'none',
+  });
+
   const loadProfile = async () => {
-    // billing settings
-    supabase.from('platform_settings').select('key, value').in('key', [
-      'minisite_monthly_credits',
-      'minisite_annual_credits',
-      'paywall_default_monthly_cents',
-      'paywall_default_daily_cents',
-    ]).then(({ data }) => {
-      if (!data) return;
-      const map: any = {};
-      data.forEach((s: any) => { map[s.key] = s.value; });
-      setBilling((prev) => ({
-        ...prev,
-        minisite_monthly_credits: parseInt(map.minisite_monthly_credits || String(prev.minisite_monthly_credits), 10),
-        minisite_annual_credits: parseInt(map.minisite_annual_credits || String(prev.minisite_annual_credits), 10),
-        paywall_default_monthly_cents: parseInt(map.paywall_default_monthly_cents || String(prev.paywall_default_monthly_cents), 10),
-        paywall_default_daily_cents: parseInt(map.paywall_default_daily_cents || String(prev.paywall_default_daily_cents), 10),
-      }));
-    });
-
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .eq('user_id', user!.id)
-      .single();
-
-    if (data) {
-      setProfile({
-        name: data.name,
-        title: data.title || '',
-        bio: data.bio || '',
-        location: data.location || '',
-        skills: (data.skills || []).join(', '),
-        contact_email: data.contact_email || '',
-        contact_phone: data.contact_phone || '',
-        contact_linkedin: data.contact_linkedin || '',
-        is_published: data.is_published || false,
-        video_url: data.video_url,
-        wallet_address: (data as any).wallet_address || '',
-        paywall_enabled: (data as any).paywall_enabled || false,
-        paywall_mode: ((data as any).paywall_mode || 'none') as any,
-        paywall_interval: ((data as any).paywall_interval || 'monthly') as any,
-        paywall_price_cents: (data as any).paywall_price_cents || 0,
-        minisite_paid_until: (data as any).minisite_paid_until || null,
-        minisite_plan: ((data as any).minisite_plan || 'none') as any,
+    try {
+      // billing settings
+      supabase.from('platform_settings').select('key, value').in('key', [
+        'minisite_monthly_credits',
+        'minisite_annual_credits',
+        'paywall_default_monthly_cents',
+        'paywall_default_daily_cents',
+      ]).then(({ data }) => {
+        if (!data) return;
+        const map: any = {};
+        data.forEach((s: any) => { map[s.key] = s.value; });
+        setBilling((prev) => ({
+          ...prev,
+          minisite_monthly_credits: parseInt(map.minisite_monthly_credits || String(prev.minisite_monthly_credits), 10),
+          minisite_annual_credits: parseInt(map.minisite_annual_credits || String(prev.minisite_annual_credits), 10),
+          paywall_default_monthly_cents: parseInt(map.paywall_default_monthly_cents || String(prev.paywall_default_monthly_cents), 10),
+          paywall_default_daily_cents: parseInt(map.paywall_default_daily_cents || String(prev.paywall_default_daily_cents), 10),
+        }));
       });
-      setProfileId(data.id);
-      setSlug(data.slug);
-      setUserType(data.user_type);
-      setCredits(data.credits || 0);
-      setPhotoUrl(data.photo_url || null);
-      setSiteCustomization((data as any).site_customization || {});
-      setBannerUrl((data as any).banner_url || null);
-      // Load saved template
-      const savedTemplateId = ((data as any).site_customization as any)?.template_id;
-      if (savedTemplateId) {
-        const tmpl = getTemplateById(savedTemplateId);
-        if (tmpl) setSelectedTemplate(tmpl);
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', user!.id)
+        .maybeSingle();
+
+      if (data) {
+        setProfile({
+          name: data.name,
+          title: data.title || '',
+          bio: data.bio || '',
+          location: data.location || '',
+          skills: (data.skills || []).join(', '),
+          contact_email: data.contact_email || '',
+          contact_phone: data.contact_phone || '',
+          contact_linkedin: data.contact_linkedin || '',
+          is_published: data.is_published || false,
+          video_url: data.video_url,
+          wallet_address: (data as any).wallet_address || '',
+          paywall_enabled: (data as any).paywall_enabled || false,
+          paywall_mode: ((data as any).paywall_mode || 'none') as any,
+          paywall_interval: ((data as any).paywall_interval || 'monthly') as any,
+          paywall_price_cents: (data as any).paywall_price_cents || 0,
+          minisite_paid_until: (data as any).minisite_paid_until || null,
+          minisite_plan: ((data as any).minisite_plan || 'none') as any,
+        });
+        setProfileId(data.id);
+        setSlug(data.slug);
+        setUserType(data.user_type);
+        setCredits(data.credits || 0);
+        setPhotoUrl(data.photo_url || null);
+        setSiteCustomization((data as any).site_customization || {});
+        setBannerUrl((data as any).banner_url || null);
+        const savedTemplateId = ((data as any).site_customization as any)?.template_id;
+        if (savedTemplateId) {
+          const tmpl = getTemplateById(savedTemplateId);
+          if (tmpl) setSelectedTemplate(tmpl);
+        }
+      } else {
+        // Usuário logado mas sem perfil (conta nova) — mostra formulário com defaults
+        setProfile(defaultProfileFromUser());
+        setProfileId(null);
+        setSlug(user?.email?.split('@')[0] || 'meu-perfil');
+        setUserType('seeker');
       }
+    } catch (_) {
+      setProfile(defaultProfileFromUser());
+      setSlug(user?.email?.split('@')[0] || 'meu-perfil');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   // Se está publicado mas minisite_paid_until venceu, despublica (mensalidade obrigatória via créditos)
@@ -236,33 +267,48 @@ const Dashboard = () => {
       }
     }
     setSaving(true);
-    const { error } = await supabase
-      .from('profiles')
-      .update({
-        name: profile.name,
-        title: profile.title,
-        bio: profile.bio,
-        location: profile.location,
-        skills: profile.skills.split(',').map(s => s.trim()).filter(Boolean),
-        contact_email: profile.contact_email,
-        contact_phone: profile.contact_phone,
-        contact_linkedin: profile.contact_linkedin,
-        is_published: profile.is_published,
-        wallet_address: profile.wallet_address || null,
-        paywall_enabled: profile.paywall_enabled,
-        paywall_mode: profile.paywall_mode,
-        paywall_interval: profile.paywall_interval,
-        paywall_price_cents: profile.paywall_price_cents,
-        minisite_paid_until: profile.minisite_paid_until || null,
-        minisite_plan: profile.minisite_plan || 'none',
-      } as any)
-      .eq('user_id', user.id);
+    const payload = {
+      name: profile.name,
+      title: profile.title,
+      bio: profile.bio,
+      location: profile.location,
+      skills: profile.skills.split(',').map(s => s.trim()).filter(Boolean),
+      contact_email: profile.contact_email,
+      contact_phone: profile.contact_phone,
+      contact_linkedin: profile.contact_linkedin,
+      is_published: profile.is_published,
+      wallet_address: profile.wallet_address || null,
+      paywall_enabled: profile.paywall_enabled,
+      paywall_mode: profile.paywall_mode,
+      paywall_interval: profile.paywall_interval,
+      paywall_price_cents: profile.paywall_price_cents,
+      minisite_paid_until: profile.minisite_paid_until || null,
+      minisite_plan: profile.minisite_plan || 'none',
+      user_id: user.id,
+      slug: slug || user.email?.split('@')[0] || 'meu-perfil',
+      user_type: userType,
+    } as any;
+
+    let error: any = null;
+    let created = false;
+    if (profileId) {
+      const res = await supabase.from('profiles').update(payload).eq('user_id', user.id);
+      error = res.error;
+    } else {
+      const res = await supabase.from('profiles').insert(payload).select('id').single();
+      error = res.error;
+      if (!error && res.data) {
+        setProfileId(res.data.id);
+        created = true;
+      }
+    }
 
     setSaving(false);
     if (error) {
       toast.error(error.message);
     } else {
-      toast.success('Perfil salvo!');
+      toast.success(profileId ? 'Perfil salvo!' : 'Perfil criado!');
+      if (created) loadProfile();
     }
   };
 
