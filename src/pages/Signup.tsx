@@ -1,7 +1,5 @@
-'use client';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -15,7 +13,7 @@ import { UserPlus } from 'lucide-react';
 
 const Signup = () => {
   const { t } = useLanguage();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +35,7 @@ const Signup = () => {
       toast.error(error.message);
     } else {
       toast.success(t('auth.signupSuccess'));
-      router.push('/login');
+      navigate('/login', { replace: true });
     }
   };
 
@@ -93,7 +91,7 @@ const Signup = () => {
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {t('auth.hasAccount')}{' '}
-            <Link href="/login" className="text-primary font-medium hover:underline">{t('auth.loginLink')}</Link>
+            <Link to="/login" className="text-primary font-medium hover:underline">{t('auth.loginLink')}</Link>
           </p>
         </div>
       </main>

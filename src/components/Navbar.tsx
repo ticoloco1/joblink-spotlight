@@ -1,5 +1,4 @@
-'use client';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { Language, languageNames } from '@/i18n/translations';
 import { Globe, Menu, X, LayoutDashboard, Shield } from 'lucide-react';
@@ -34,32 +33,32 @@ const Navbar = () => {
       <SlugTicker />
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <img src={typeof logoImg === 'string' ? logoImg : logoImg.src} alt="JobinLink" className="h-9 w-9 rounded-lg object-contain" />
           <span className="text-xl font-bold font-display text-foreground">JobinLink</span>
         </Link>
 
         {/* Desktop nav */}
         <div className="hidden items-center gap-6 md:flex">
-          <Link href="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.home')}
           </Link>
-          <Link href="/directory" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/directory" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.directory')}
           </Link>
-          <Link href="/jobs" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/jobs" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.jobs')}
           </Link>
-          <Link href="/how-it-works" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/how-it-works" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.howItWorks')}
           </Link>
-          <Link href="/videos" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/videos" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.videos')}
           </Link>
           <a href="/#pricing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.pricing')}
           </a>
-          <Link href="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+          <Link to="/marketplace" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
             {t('nav.marketplace')}
           </Link>
 
@@ -90,13 +89,13 @@ const Navbar = () => {
           {user ? (
             <>
               {isAdmin && (
-                <Link href="/admin">
+                <Link to="/admin">
                   <Button variant="ghost" size="sm" className="text-destructive">
                     <Shield className="h-4 w-4 mr-1" /> Admin
                   </Button>
                 </Link>
               )}
-              <Link href="/dashboard">
+              <Link to="/dashboard">
                 <Button variant="ghost" size="sm">
                   <LayoutDashboard className="h-4 w-4 mr-1" /> Dashboard
                 </Button>
@@ -107,10 +106,10 @@ const Navbar = () => {
             </>
           ) : (
             <>
-              <Link href="/login">
+              <Link to="/login">
                 <Button variant="ghost" size="sm">{t('nav.login')}</Button>
               </Link>
-              <Link href="/signup">
+              <Link to="/signup">
                 <Button size="sm" className="gradient-hero text-primary-foreground border-0">
                   {t('nav.signup')}
                 </Button>
@@ -129,13 +128,13 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="border-t border-border bg-background px-4 py-4 md:hidden">
           <div className="flex flex-col gap-3">
-            <Link href="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.home')}</Link>
-            <Link href="/directory" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.directory')}</Link>
-            <Link href="/jobs" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.jobs')}</Link>
-            <Link href="/how-it-works" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.howItWorks')}</Link>
-            <Link href="/videos" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.videos')}</Link>
+            <Link to="/" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.home')}</Link>
+            <Link to="/directory" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.directory')}</Link>
+            <Link to="/jobs" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.jobs')}</Link>
+            <Link to="/how-it-works" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.howItWorks')}</Link>
+            <Link to="/videos" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.videos')}</Link>
             <a href="/#pricing" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.pricing')}</a>
-            <Link href="/marketplace" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.marketplace')}</Link>
+            <Link to="/marketplace" onClick={() => setMobileOpen(false)} className="text-sm font-medium text-foreground">{t('nav.marketplace')}</Link>
             <div className="flex gap-2 pt-2">
               {languages.map((lang) => (
                 <button
@@ -151,13 +150,13 @@ const Navbar = () => {
               {user ? (
                 <>
                   {isAdmin && (
-                    <Link href="/admin" className="flex-1" onClick={() => setMobileOpen(false)}>
+                    <Link to="/admin" className="flex-1" onClick={() => setMobileOpen(false)}>
                       <Button variant="outline" size="sm" className="w-full text-destructive border-destructive/30">
                         <Shield className="h-4 w-4 mr-1" /> Admin
                       </Button>
                     </Link>
                   )}
-                  <Link href="/dashboard" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link to="/dashboard" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">Dashboard</Button>
                   </Link>
                   <Button variant="outline" size="sm" className="flex-1" onClick={() => { signOut(); setMobileOpen(false); }}>
@@ -166,10 +165,10 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link href="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link to="/login" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button variant="outline" size="sm" className="w-full">{t('nav.login')}</Button>
                   </Link>
-                  <Link href="/signup" className="flex-1" onClick={() => setMobileOpen(false)}>
+                  <Link to="/signup" className="flex-1" onClick={() => setMobileOpen(false)}>
                     <Button size="sm" className="w-full gradient-hero text-primary-foreground border-0">{t('nav.signup')}</Button>
                   </Link>
                 </>

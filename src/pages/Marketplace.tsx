@@ -1,7 +1,6 @@
-'use client';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -23,7 +22,7 @@ interface MarketplaceItem {
 
 export default function Marketplace() {
   const { user } = useAuth();
-  const searchParams = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState<MarketplaceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [buyingId, setBuyingId] = useState<string | null>(null);

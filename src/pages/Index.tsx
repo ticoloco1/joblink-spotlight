@@ -1,6 +1,6 @@
 import { useLanguage } from '@/i18n/LanguageContext';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { User, FileText, Search, Globe, Lock, Languages, Star, Briefcase, Crown } from 'lucide-react';
 import Navbar from '@/components/Navbar';
@@ -61,7 +61,7 @@ const Index = () => {
         {/* Hero */}
         <section className="relative overflow-hidden py-20 md:py-32">
           <div className="absolute inset-0">
-            <img src={heroBanner.src} alt="Professional networking" className="h-full w-full object-cover" />
+            <img src={typeof heroBanner === 'string' ? heroBanner : (heroBanner as any).src} alt="Professional networking" className="h-full w-full object-cover" />
             <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
           </div>
           <div className="container relative mx-auto px-4 text-center">
@@ -88,12 +88,12 @@ const Index = () => {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
             >
-              <Link href="/signup">
+              <Link to="/signup">
                 <Button size="lg" className="gradient-hero text-primary-foreground border-0 px-8 text-base shadow-soft">
                   {t('hero.cta')}
                 </Button>
               </Link>
-              <Link href="/directory">
+              <Link to="/directory">
                 <Button size="lg" variant="outline" className="px-8 text-base bg-background/60 backdrop-blur-sm">
                   {t('hero.ctaSecondary')}
                 </Button>
@@ -158,7 +158,7 @@ const Index = () => {
                     </li>
                   ))}
                 </ul>
-                <Link href="/signup">
+                <Link to="/signup">
                   <Button className="mt-8 w-full gradient-hero text-primary-foreground border-0">
                     {t('pricing.jobseeker.cta')}
                   </Button>
@@ -188,7 +188,7 @@ const Index = () => {
                     </li>
                   ))}
                 </ul>
-                <Link href="/signup">
+                <Link to="/signup">
                   <Button className="mt-8 w-full gradient-hero text-primary-foreground border-0">
                     {t('pricing.company.cta')}
                   </Button>
@@ -227,7 +227,7 @@ const Index = () => {
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-amber-500" />{t('premium.featured.f2')}</li>
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-amber-500" />{t('premium.featured.f3')}</li>
                 </ul>
-                <Link href="/signup">
+                <Link to="/signup">
                   <Button className="mt-8 w-full border-amber-500 text-amber-600 hover:bg-amber-50" variant="outline">
                     {t('premium.featured.cta')}
                   </Button>
@@ -259,7 +259,7 @@ const Index = () => {
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-primary" />{t('premium.jobs.f2')}</li>
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-primary" />{t('premium.jobs.f3')}</li>
                 </ul>
-                <Link href="/signup">
+                <Link to="/signup">
                   <Button className="mt-8 w-full gradient-hero text-primary-foreground border-0">
                     {t('premium.jobs.cta')}
                   </Button>
@@ -288,7 +288,7 @@ const Index = () => {
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-violet-500" />{t('premium.highlight.f2')}</li>
                   <li className="flex items-center gap-2 text-sm"><div className="h-1.5 w-1.5 rounded-full bg-violet-500" />{t('premium.highlight.f3')}</li>
                 </ul>
-                <Link href="/signup">
+                <Link to="/signup">
                   <Button className="mt-8 w-full border-violet-500 text-violet-600 hover:bg-violet-50" variant="outline">
                     {t('premium.highlight.cta')}
                   </Button>

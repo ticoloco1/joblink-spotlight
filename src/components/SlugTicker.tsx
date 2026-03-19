@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Tag } from 'lucide-react';
 import { supabase, isSupabaseConfigured } from '@/integrations/supabase/client';
 
@@ -31,7 +31,7 @@ export default function SlugTicker() {
     <div className="border-b border-border bg-muted/50 py-1.5">
       <div className="container mx-auto px-4">
         <Link
-          href="/marketplace"
+          to="/marketplace"
           className="flex items-center justify-center gap-2 text-xs font-medium text-muted-foreground hover:text-primary transition-colors"
         >
           <Tag className="h-3.5 w-3.5 shrink-0 text-primary" />

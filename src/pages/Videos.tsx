@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import BoostBar from '@/components/BoostBar';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -366,7 +366,7 @@ const Videos = () => {
                             )}
                           </div>
                           <div className="min-w-0">
-                            <Link href={`/${prefix}/${p.slug}`} className="font-semibold text-foreground hover:text-primary truncate block">
+                            <Link to={`/${prefix}/${p.slug}`} className="font-semibold text-foreground hover:text-primary truncate block">
                               {p.name}
                             </Link>
                             {p.title && <p className="text-xs text-muted-foreground truncate">{p.title}</p>}

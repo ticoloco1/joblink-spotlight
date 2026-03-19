@@ -1,4 +1,4 @@
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 
 const Footer = () => {
@@ -16,10 +16,10 @@ const Footer = () => {
           </div>
           <p className="text-sm text-muted-foreground">{t('footer.tagline')}</p>
           <div className="flex gap-4">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.home')}</Link>
-            <Link href="/directory" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.directory')}</Link>
-            <Link href="/marketplace" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.marketplace')}</Link>
-            <Link href="/advertise" className="text-sm text-muted-foreground hover:text-foreground">Advertise</Link>
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.home')}</Link>
+            <Link to="/directory" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.directory')}</Link>
+            <Link to="/marketplace" className="text-sm text-muted-foreground hover:text-foreground">{t('nav.marketplace')}</Link>
+            <Link to="/advertise" className="text-sm text-muted-foreground hover:text-foreground">Advertise</Link>
           </div>
         </div>
         <div className="mt-8 text-center text-xs text-muted-foreground">

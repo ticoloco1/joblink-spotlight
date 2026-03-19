@@ -2,7 +2,6 @@
 
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from 'next-themes';
-import { MemoryRouter } from 'react-router-dom';
 import { Toaster } from '@/components/ui/toaster';
 import { Toaster as Sonner } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -24,7 +23,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 <Toaster />
                 <Sonner />
                 <BroadcastBanner />
-                <MemoryRouter>{children}</MemoryRouter>
+                {children}
               </TooltipProvider>
             </QueryClientProvider>
           </AuthProvider>

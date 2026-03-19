@@ -1,5 +1,4 @@
-'use client';
-import { useParams, useSearchParams, usePathname } from 'next/navigation';
+import { useParams, useSearchParams, useLocation } from 'react-router-dom';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { getTemplateById, templates } from '@/data/templates';
 import { supabase } from '@/integrations/supabase/client';
@@ -17,8 +16,8 @@ import { toast } from 'sonner';
 const ProfilePage = ({ prefix }: { prefix?: 'u' | 'c' } = {}) => {
   const params = useParams();
   const slug = (params?.slug as string) ?? '';
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
+  const [searchParams] = useSearchParams();
+  const { pathname } = useLocation();
   const isCompany = prefix === 'c' || pathname?.startsWith('/c/');
   const { t } = useLanguage();
   const { user } = useAuth();

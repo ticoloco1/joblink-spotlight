@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -33,7 +33,7 @@ interface CartItem {
 
 const SlugMarketplace = () => {
   const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [pricing, setPricing] = useState<SlugPricing>({
     slug_price_1_char: 100000,
@@ -156,7 +156,7 @@ const SlugMarketplace = () => {
 
   const handleCheckout = async () => {
     if (!user) {
-      router.replace('/login');
+      navigate('/login', { replace: true });
       return;
     }
     if (!hasProfile) {

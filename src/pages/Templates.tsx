@@ -1,13 +1,11 @@
-'use client';
-
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 
 const Templates = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
   useEffect(() => {
-    router.replace('/dashboard');
-  }, [router]);
+    navigate('/dashboard', { replace: true });
+  }, [navigate]);
   return null;
 };
 

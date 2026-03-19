@@ -1,6 +1,6 @@
 'use client';
 import { useLanguage } from '@/i18n/LanguageContext';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Search, Rocket, Star } from 'lucide-react';
 import { useState, useEffect } from 'react';
@@ -111,7 +111,7 @@ const Directory = () => {
       <Helmet>
         <title>{t('directory.title')} | JobinLink</title>
         <meta name="description" content={t('directory.subtitle')} />
-        <link rel="canonical" href="https://jobinlink.com/directory" />
+        <link rel="canonical" to="https://jobinlink.com/directory" />
         <meta property="og:title" content={`${t('directory.title')} | JobinLink`} />
         <meta property="og:description" content={t('directory.subtitle')} />
         <meta property="og:url" content="https://jobinlink.com/directory" />
@@ -165,7 +165,7 @@ const Directory = () => {
                     >
                       <div className={`rounded-xl border bg-card shadow-card transition-all hover:shadow-elevated ${isOnHomepage ? 'border-primary ring-2 ring-primary/20' : 'border-border'}`}>
                         <Link
-                          href={`/${prefix}/${profile.slug}`}
+                          to={`/${prefix}/${profile.slug}`}
                           className="group block p-6"
                         >
                           <div className="flex items-start gap-4">

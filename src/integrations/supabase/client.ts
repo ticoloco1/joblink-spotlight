@@ -1,8 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Next.js: process.env.NEXT_PUBLIC_* | Vite: import.meta.env.VITE_*
+function getSupabaseUrl(): string {
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_URL) return process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_SUPABASE_URL) return (import.meta as any).env.VITE_SUPABASE_URL;
+  return '';
+}
+function getSupabaseAnonKey(): string {
+  if (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_SUPABASE_ANON_KEY) return process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const im = typeof import.meta !== 'undefined' ? (import.meta as any).env : undefined;
+  if (im?.VITE_SUPABASE_PUBLISHABLE_KEY) return im.VITE_SUPABASE_PUBLISHABLE_KEY;
+  if (im?.VITE_SUPABASE_ANON_KEY) return im.VITE_SUPABASE_ANON_KEY;
+  return '';
+}
+
+const SUPABASE_URL = getSupabaseUrl();
+const SUPABASE_ANON_KEY = getSupabaseAnonKey();
 
 export const isSupabaseConfigured =
   typeof SUPABASE_URL === 'string' &&

@@ -7,7 +7,9 @@ export function getBaseUrl(): string {
   if (typeof window !== 'undefined' && window.location?.origin) {
     return window.location.origin;
   }
-  return process.env.NEXT_PUBLIC_APP_CENTER_URL || 'https://jobinlink.com';
+  const nextUrl = typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_APP_CENTER_URL;
+  const viteUrl = typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_APP_CENTER_URL;
+  return (nextUrl || viteUrl || 'https://jobinlink.com') as string;
 }
 
 export function getProfilePath(slug: string, isCompany: boolean): string {

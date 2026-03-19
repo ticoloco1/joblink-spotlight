@@ -1,4 +1,5 @@
 import logo from '@/assets/logo.png';
+const logoUrl = typeof logo === 'string' ? logo : (logo as { src: string }).src;
 // Vídeos em public/ para Next.js (evitar loader de mp4)
 const demoTechVideo = '/demo-tech.mp4';
 const demoCreativeVideo = '/demo-creative.mp4';
@@ -35,7 +36,7 @@ export const demoProfiles: ProfileData[] = [
     name: 'TechNova Labs',
     title: 'Empresa de Tecnologia (Demo)',
     location: 'São Paulo, BR',
-    photo: logo.src,
+    photo: logoUrl,
     bio: 'Construímos produtos digitais com foco em performance, design e escala. (Perfil de demonstração)',
     skills: ['React', 'TypeScript', 'Node.js', 'Cloud', 'Product'],
     links: [
@@ -64,7 +65,7 @@ export const demoProfiles: ProfileData[] = [
     name: 'Aurora Creative Studio',
     title: 'Estúdio Criativo (Demo)',
     location: 'Rio de Janeiro, BR',
-    photo: logo.src,
+    photo: logoUrl,
     bio: 'Conteúdo, vídeo e identidade de marca para startups e creators. (Perfil de demonstração)',
     skills: ['Branding', 'Motion', 'Video', 'Design', 'Social'],
     links: [
@@ -93,7 +94,7 @@ export const demoProfiles: ProfileData[] = [
     name: 'João Frontend',
     title: 'Frontend Engineer',
     location: 'Curitiba, BR',
-    photo: logo.src,
+    photo: logoUrl,
     bio: 'Frontend com foco em interfaces rápidas, acessíveis e bem testadas. (Perfil de demonstração)',
     skills: ['React', 'TypeScript', 'Accessibility', 'Vitest'],
     links: [
@@ -124,7 +125,7 @@ export const demoProfiles: ProfileData[] = [
     name: 'Marina Product',
     title: 'Product Designer',
     location: 'Belo Horizonte, BR',
-    photo: logo.src,
+    photo: logoUrl,
     bio: 'Design de produto orientado a métricas e colaboração com engenharia. (Perfil de demonstração)',
     skills: ['Figma', 'Prototyping', 'Design Systems', 'UX'],
     links: [
@@ -200,7 +201,7 @@ export const demoVideoProfiles: DemoVideoProfile[] = [
     id: '55555555-5555-5555-5555-555555555555',
     name: 'TechNova Labs',
     title: 'Empresa de Tecnologia (Demo)',
-    photo_url: logo.src,
+    photo_url: logoUrl,
     video_url: demoTechVideo,
     slug: 'technova-labs',
     location: 'São Paulo, BR',
@@ -213,7 +214,7 @@ export const demoVideoProfiles: DemoVideoProfile[] = [
     id: '66666666-6666-6666-6666-666666666666',
     name: 'Aurora Creative Studio',
     title: 'Estúdio Criativo (Demo)',
-    photo_url: logo.src,
+    photo_url: logoUrl,
     video_url: demoCreativeVideo,
     slug: 'aurora-studio',
     location: 'Rio de Janeiro, BR',

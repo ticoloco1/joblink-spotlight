@@ -1,6 +1,5 @@
-'use client';
 import { useState, useEffect, useRef } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useLanguage } from '@/i18n/LanguageContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -45,8 +44,8 @@ interface ProfileForm {
 const Dashboard = () => {
   const { user, loading: authLoading, subscriptions, checkSubscription } = useAuth();
   const { t } = useLanguage();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [profile, setProfile] = useState<ProfileForm | null>(null);
   const [profileId, setProfileId] = useState<string | null>(null);
   const [slug, setSlug] = useState('');
@@ -126,7 +125,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.push('/login');
+      navigate('/login', { replace: true });
       return;
     }
     if (user) loadProfile();

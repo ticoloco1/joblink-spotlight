@@ -6,6 +6,7 @@
 
 export const CENTER_URL =
   (typeof process !== 'undefined' && process.env?.NEXT_PUBLIC_APP_CENTER_URL) ||
+  (typeof import.meta !== 'undefined' && (import.meta as any).env?.VITE_APP_CENTER_URL) ||
   'https://jobinlink.com';
 
 export type SlugPrefix = 's' | 'handle';

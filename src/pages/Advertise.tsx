@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import Navbar from '@/components/Navbar';
@@ -40,7 +40,7 @@ const statusIcons: Record<string, typeof CheckCircle> = {
 
 const Advertise = () => {
   const { user, loading: authLoading } = useAuth();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [ads, setAds] = useState<AdRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -55,7 +55,7 @@ const Advertise = () => {
 
   useEffect(() => {
     if (!authLoading && !user) {
-      router.replace('/login');
+      navigate('/login', { replace: true });
       return;
     }
     if (user) loadAds();
